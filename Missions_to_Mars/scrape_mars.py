@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as bs
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
-import requests
+
 
 
 def scrape():
@@ -21,6 +21,10 @@ def scrape():
     news_title = browser.find_by_xpath('//*[@id="news"]/div[1]/div/div[2]/div/div[2]').text
     news_paragraph = browser.find_by_xpath('//*[@id="news"]/div[1]/div/div[2]/div/div[3]').text
 
+    # Append to dictionary
+    mars_dict['News_Title'] = news_title
+    mars_dict['News_Paragraph'] = news_paragraph
+
     # URL for Images
     url = 'https://spaceimages-mars.com/'
     browser.visit(url)
@@ -30,6 +34,9 @@ def scrape():
 
     # Xpath for Img
     featured_image_url = browser.find_by_xpath('/html/body/div[8]/div/div/div/div/img')['src']
+
+    # Append to dictionary
+    mars_dict['Featured_Img_URL'] = featured_image_url
 
     # URL for tables
     url = 'https://galaxyfacts-mars.com/'
@@ -41,6 +48,10 @@ def scrape():
                                         1: 'Mars',
                                             2: 'Earth'})
     two_df = two_df.set_index('Values')
+
+    # HTML for comparison table
+    mars_html = two_df.to_html()
+    mars_html = mars_html.replace('\n', '')
 
     # URL for Mars Hemisphere Imgs and Titles
     url = 'https://marshemispheres.com/'
@@ -70,6 +81,11 @@ def scrape():
         # Return to previous page for next loop
         browser.back()
 
+    # Append to dictionary    
+    mars_dict['Full_url_and_title'] = full_href
+
     browser.quit()
+
+    return mars_dict
     
 
