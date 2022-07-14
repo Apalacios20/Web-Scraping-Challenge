@@ -50,8 +50,11 @@ def scrape():
     two_df = two_df.set_index('Values')
 
     # HTML for comparison table
-    mars_html = two_df.to_html()
+    mars_html = two_df.to_html(classes="table table-striped")
     mars_html = mars_html.replace('\n', '')
+
+    # Append to dictionary
+    mars_dict['mars_table'] = mars_html
 
     # URL for Mars Hemisphere Imgs and Titles
     url = 'https://marshemispheres.com/'

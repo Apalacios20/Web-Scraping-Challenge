@@ -14,7 +14,8 @@ mongo = PyMongo(app)
 @app.route("/")
 def index():
     # find one document from our mongo db and return it.
-    listings = mongo.db.listings.find_one()
+    listings = mongo.db.python_dict.find_one()
+    print(listings)
     # pass that listing to render_template
     return render_template("index.html", listings=listings)
 
@@ -23,11 +24,12 @@ def index():
 @app.route("/scrape")
 def scraper():
     # create a listings database
-    listings = mongo.db.listings
+    listings = mongo.db.python_dict
     # call the scrape function in our scrape_phone file. This will scrape and save to mongo.
     listings_data = scrape_mars.scrape()
     # update our listings with the data that is being scraped.
-    listings.update({}, listings_data, upsert=True)
+    #listings.update({}, listings_data, upsert=True)
+    listings.update_one({}, {"$set": listings_data}, upsert=True)
     # return a message to our page so we know it was successful.
     return redirect("/", code=302)
 
